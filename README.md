@@ -13,7 +13,19 @@
 
 A local Windows AI writing assistant for Xiaohongshu (RED) creators, focused on women's personal and emotional essays, with guided drafting, human editing, style learning, quality checks, image generation, and local export.
 
-[功能介绍](#能做什么) · [安装启动](#安装与启动) · [图像生成](#描述生成封面图片) · [技术结构](#技术结构) · [参与贡献](CONTRIBUTING.md) · [完整文档](docs/完整使用说明.md)
+[实操截图](#实操运营截图) · [功能介绍](#能做什么) · [安装启动](#安装与启动) · [图像生成](#描述生成封面图片) · [技术结构](#技术结构) · [参与贡献](CONTRIBUTING.md) · [完整文档](docs/完整使用说明.md)
+
+## 实操运营截图
+
+作者提供的实操运营账号截图，配图由作者自行寻找、人工选用。
+
+<p>
+  <a href="docs/images/operations/account-profile.png"><img src="docs/images/operations/account-profile.png" width="240" alt="实操运营账号截图一"></a>
+  <a href="docs/images/operations/note-enfj.png"><img src="docs/images/operations/note-enfj.png" width="240" alt="实操运营账号截图二"></a>
+  <a href="docs/images/operations/note-infp-intp.jpg"><img src="docs/images/operations/note-infp-intp.jpg" width="240" alt="实操运营账号截图三"></a>
+</p>
+
+## 工作台预览
 
 ![工作台示例，全部为虚构演示数据](docs/images/dashboard.png)
 
@@ -119,7 +131,7 @@ xiaohongshu-emotion-writer/
 ├── backend/          # API、业务流程、数据库迁移和测试
 ├── frontend/         # 页面、组件与前端测试
 ├── scripts/          # 安装、任务调度和源码整理
-├── docs/             # 中文文档、示例截图与验证报告
+├── docs/             # 中文文档、运营案例、示例截图与验证报告
 ├── .github/          # 自动检查、Issue 和 PR 模板
 ├── .env.example      # 配置示例，不含实际密钥
 ├── CONTRIBUTING.md   # 贡献说明
