@@ -1,0 +1,8 @@
+{
+  "plugin_id":"local-ocr","name":"Windows Local OCR Provider","version":"1.2.0","provider_type":"OCRProvider",
+  "source_repo":"builtin://windows-media-ocr","pinned_ref":"workspace","license":"project-internal","maintenance_status":"maintained",
+  "permissions":["read:uploads/ocr/pending","write:uploads/ocr/pending"],"allowed_domains":[],"read_dirs":["uploads/ocr/pending"],"write_dirs":["uploads/ocr/pending"],
+  "secret_names":[],"needs_secret":false,"retention":"trend and comment screenshots are deleted after confirmation/discard; confirmed analytics screenshots are retained until explicit permanent deletion","timeout_seconds":30,
+  "health_check":"GET /api/ocr/status","rollback_version":"builtin","enabled":true,"built_in":true,
+  "tools":[{"tool_id":"ocr.recognize_local_screenshot","description":"Recognize one validated local PNG or JPEG screenshot","input_schema":{"type":"object","required":["local_image_path"],"properties":{"local_image_path":{"type":"string"}}},"output_schema":{"type":"object","required":["text","lines"],"properties":{"text":{"type":"string"},"lines":{"type":"array","items":{"type":"string"}}}},"permissions":["read:uploads/ocr/pending"],"timeout_seconds":30,"max_output_bytes":2097152}]
+}

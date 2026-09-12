@@ -1,0 +1,9 @@
+{
+  "plugin_id": "image-generation-compatible", "name": "图像生成（Images 兼容接口）", "version": "1.0.0", "provider_type": "ImageGenerationProvider",
+  "source_repo": "builtin://backend.app.image_provider.OpenAICompatibleImageProvider", "pinned_ref": "workspace", "license": "project-internal", "maintenance_status": "maintained",
+  "permissions": ["network:configured-https-endpoint", "network:public-image-download", "filesystem:article-generated-images"],
+  "allowed_domains": [], "read_dirs": [], "write_dirs": ["uploads/{content_id}/generated"], "secret_names": ["image"], "needs_secret": true,
+  "retention": "Descriptions and generated candidates remain local until deleted. Only the description and generation parameters are sent to the configured service. Downloads require validated public HTTPS addresses.",
+  "timeout_seconds": 180, "health_check": "GET /api/setup/image checks saved configuration only; explicit generation is the connectivity check", "rollback_version": "disabled",
+  "enabled": false, "built_in": true, "tools": []
+}

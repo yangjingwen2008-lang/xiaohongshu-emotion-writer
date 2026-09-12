@@ -1,0 +1,11 @@
+{
+  "plugin_id": "deepseek-llm", "name": "DeepSeek LLM Provider", "version": "1.0.0",
+  "provider_type": "LLMProvider", "source_repo": "builtin://backend.app.providers.DeepSeekProvider",
+  "pinned_ref": "workspace", "license": "project-internal", "maintenance_status": "maintained",
+  "permissions": ["network:https://api.deepseek.com"], "allowed_domains": ["api.deepseek.com"],
+  "read_dirs": [], "write_dirs": [], "secret_names": ["deepseek"], "needs_secret": true,
+  "retention": "request payload is not retained by this application", "timeout_seconds": 90,
+  "health_check": "POST /api/setup/test/deepseek", "rollback_version": "builtin",
+  "enabled": true, "built_in": true,
+  "tools": [{"tool_id":"llm.generate_json","description":"Generate schema-constrained JSON","input_schema":{"type":"object"},"output_schema":{"type":"object"},"permissions":["network:https://api.deepseek.com"],"timeout_seconds":90,"max_output_bytes":2097152}]
+}

@@ -1,0 +1,7 @@
+{
+  "plugin_id":"fts5-embedding","name":"Local FTS5 Retrieval Provider","version":"1.0.0","provider_type":"EmbeddingProvider",
+  "source_repo":"builtin://backend.app.memory_retrieval","pinned_ref":"workspace","license":"project-internal","maintenance_status":"maintained",
+  "permissions":["read:data/content","write:data/search-index"],"allowed_domains":[],"read_dirs":["data/content"],"write_dirs":["data/search-index"],"secret_names":[],"needs_secret":false,
+  "retention":"local index follows content retention","timeout_seconds":10,"health_check":"startup index validation","rollback_version":"builtin","enabled":true,"built_in":true,
+  "tools":[{"tool_id":"retrieval.fts5","description":"Search local confirmed content history","input_schema":{"type":"object"},"output_schema":{"type":"object"},"permissions":["read:data/content"],"timeout_seconds":10,"max_output_bytes":1048576}]
+}

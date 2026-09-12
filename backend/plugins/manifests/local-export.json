@@ -1,0 +1,7 @@
+{
+  "plugin_id":"local-export","name":"Local Export Provider","version":"1.0.0","provider_type":"ExportProvider",
+  "source_repo":"builtin://backend.app.publishing.export_package","pinned_ref":"workspace","license":"project-internal","maintenance_status":"maintained",
+  "permissions":["read:data/content","write:exports/packages"],"allowed_domains":[],"read_dirs":["data/content"],"write_dirs":["exports/packages"],"secret_names":[],"needs_secret":false,
+  "retention":"user-controlled local files","timeout_seconds":30,"health_check":"POST /api/contents/{id}/export","rollback_version":"builtin","enabled":true,"built_in":true,
+  "tools":[{"tool_id":"export.local_package","description":"Export a local article package","input_schema":{"type":"object"},"output_schema":{"type":"object"},"permissions":["write:exports/packages"],"timeout_seconds":30,"max_output_bytes":52428800}]
+}

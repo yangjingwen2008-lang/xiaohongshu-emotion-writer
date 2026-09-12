@@ -1,0 +1,18 @@
+name: 功能建议
+description: 描述需要解决的实际问题和建议行为。
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 使用场景
+      description: 当前哪一步不方便，希望解决什么问题？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议行为
+      description: 描述输入、操作和期望结果；如有替代方案可以一起说明。
+    validations:
+      required: true

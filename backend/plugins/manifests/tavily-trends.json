@@ -1,0 +1,11 @@
+{
+  "plugin_id": "tavily-trends", "name": "Tavily Trend Source Provider", "version": "1.0.0",
+  "provider_type": "TrendSourceProvider", "source_repo": "builtin://backend.app.providers.TavilyTrendSourceProvider",
+  "pinned_ref": "workspace", "license": "project-internal", "maintenance_status": "maintained",
+  "permissions": ["network:https://api.tavily.com"], "allowed_domains": ["api.tavily.com"],
+  "read_dirs": [], "write_dirs": ["data/trends"], "secret_names": ["tavily"], "needs_secret": true,
+  "retention": "source evidence expires after 30 days", "timeout_seconds": 90,
+  "health_check": "GET /api/trends/runs", "rollback_version": "builtin",
+  "enabled": true, "built_in": true,
+  "tools": [{"tool_id":"trends.collect_public","description":"Collect grouped public trend evidence","input_schema":{"type":"object"},"output_schema":{"type":"object"},"permissions":["network:https://api.tavily.com","write:data/trends"],"timeout_seconds":90,"max_output_bytes":2097152}]
+}

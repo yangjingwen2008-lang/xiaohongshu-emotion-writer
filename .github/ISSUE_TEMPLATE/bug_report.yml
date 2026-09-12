@@ -1,0 +1,32 @@
+name: 问题反馈
+description: 报告可复现的安装、运行或界面问题。
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: 请使用虚构示例和脱敏日志，不要上传密钥、数据库或私人文章。
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 项目版本或 commit、Windows、Python、Node.js 版本。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 从哪个页面开始、点击了什么、输入了什么虚构示例？
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: 期望结果和实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 补充信息
+      description: 可选，提供脱敏后的错误信息或截图。

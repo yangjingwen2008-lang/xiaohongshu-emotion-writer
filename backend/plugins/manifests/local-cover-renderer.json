@@ -1,0 +1,8 @@
+{
+  "plugin_id":"local-cover-renderer","name":"Local Cover Renderer","version":"1.0.0","provider_type":"CoverRendererProvider",
+  "source_repo":"builtin://backend.app.cover_studio.render_cover","pinned_ref":"workspace","license":"project-internal","maintenance_status":"maintained",
+  "permissions":["read:uploads/content-covers","write:exports/covers"],"allowed_domains":[],"read_dirs":["uploads/content-covers"],"write_dirs":["exports/covers"],
+  "secret_names":[],"needs_secret":false,"retention":"user-controlled local files","timeout_seconds":30,
+  "health_check":"GET /api/contents/{id}/cover","rollback_version":"builtin","enabled":true,"built_in":true,
+  "tools":[{"tool_id":"cover.render_local","description":"Crop and render one validated local cover image as PNG","input_schema":{"type":"object","required":["template","copy","output_width","output_height"],"properties":{"template":{"type":"string","enum":["whitespace","magazine","subtitle"]},"copy":{"type":"string","maxLength":18},"focus_x":{"type":"number","minimum":0,"maximum":1},"focus_y":{"type":"number","minimum":0,"maximum":1},"zoom":{"type":"number","minimum":1,"maximum":3},"output_width":{"type":"integer"},"output_height":{"type":"integer"}}},"output_schema":{"type":"object","required":["format","width","height"],"properties":{"format":{"const":"PNG"},"width":{"type":"integer"},"height":{"type":"integer"}}},"permissions":["read:uploads/content-covers","write:exports/covers"],"timeout_seconds":30,"max_output_bytes":10485760}]
+}

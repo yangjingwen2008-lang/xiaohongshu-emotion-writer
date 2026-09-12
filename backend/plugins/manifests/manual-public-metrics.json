@@ -1,0 +1,7 @@
+{
+  "plugin_id":"manual-public-metrics","name":"Manual Public Metrics Provider","version":"1.0.0","provider_type":"PublicMetricsProvider",
+  "source_repo":"builtin://backend.app.analytics.save_snapshot","pinned_ref":"workspace","license":"project-internal","maintenance_status":"maintained",
+  "permissions":["write:data/analytics"],"allowed_domains":[],"read_dirs":[],"write_dirs":["data/analytics"],"secret_names":[],"needs_secret":false,
+  "retention":"user-controlled database records","timeout_seconds":10,"health_check":"GET /api/publications","rollback_version":"builtin","enabled":true,"built_in":true,
+  "tools":[{"tool_id":"metrics.record_manual","description":"Record confirmed public metrics manually","input_schema":{"type":"object"},"output_schema":{"type":"object"},"permissions":["write:data/analytics"],"timeout_seconds":10,"max_output_bytes":1048576}]
+}

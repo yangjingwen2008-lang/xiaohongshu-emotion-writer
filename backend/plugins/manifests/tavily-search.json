@@ -1,0 +1,11 @@
+{
+  "plugin_id": "tavily-search", "name": "Tavily Search Provider", "version": "1.0.0",
+  "provider_type": "SearchProvider", "source_repo": "builtin://backend.app.providers.TavilySearchProvider",
+  "pinned_ref": "workspace", "license": "project-internal", "maintenance_status": "maintained",
+  "permissions": ["network:https://api.tavily.com"], "allowed_domains": ["api.tavily.com"],
+  "read_dirs": [], "write_dirs": [], "secret_names": ["tavily"], "needs_secret": true,
+  "retention": "results are stored only in check records", "timeout_seconds": 90,
+  "health_check": "POST /api/setup/test/tavily", "rollback_version": "builtin",
+  "enabled": true, "built_in": true,
+  "tools": [{"tool_id":"search.public_web","description":"Search public web pages","input_schema":{"type":"object"},"output_schema":{"type":"object"},"permissions":["network:https://api.tavily.com"],"timeout_seconds":90,"max_output_bytes":2097152}]
+}

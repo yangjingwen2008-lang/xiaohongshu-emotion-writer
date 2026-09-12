@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chaoshi-yuji"
+version = "0.1.0"
+description = "潮湿雨季：女性情感随笔创作工作台"
+requires-python = ">=3.11"
+dependencies = [
+  "alembic==1.18.5",
+  "apscheduler==3.11.3",
+  "bleach==6.4.0",
+  "cryptography==49.0.0",
+  "fastapi==0.139.0",
+  "httpx==0.28.1",
+  "keyring==25.7.0",
+  "pillow==12.3.0",
+  "pydantic-settings==2.14.2",
+  "python-multipart==0.0.32",
+  "sqlalchemy==2.0.51",
+  "uvicorn==0.51.0",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest==9.1.1",
+  "pytest-asyncio==1.4.0",
+  "pytest-cov==7.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["backend/app"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["backend", "backend.app", "backend.app.*", "backend.prompts", "backend.plugins"]
+exclude = ["backend.tests", "backend.migrations"]
+
+[tool.setuptools.package-data]
+"backend.prompts" = ["*.json"]
+"backend.plugins" = ["manifests/*.json"]
+"backend.app" = ["windows_ocr.ps1"]
