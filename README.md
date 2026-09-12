@@ -17,7 +17,7 @@ A local Windows AI writing assistant for Xiaohongshu (RED) creators, focused on 
 
 ## 实操运营截图
 
-作者提供的实操运营账号截图，配图由作者自行寻找、人工选用。
+「她在雨季写信」是作者使用本项目进行内容创作与运营的实操账号，主要分享情感随笔与日常感受。作者在实操中已做出两篇爆款笔记，以下为账号与笔记的真实截图。案例配图由作者自行寻找、人工选用，并非 AI 生图。
 
 <p>
   <a href="docs/images/operations/account-profile.png"><img src="docs/images/operations/account-profile.png" width="240" alt="实操运营账号截图一"></a>
