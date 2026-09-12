@@ -83,7 +83,7 @@ docker compose up --build
 ## 整理公开源码
 
 ```powershell
-.\.venv\Scripts\python.exe .\scripts\prepare_release.py --output .\release\chaoshi-yuji
+.\.venv\Scripts\python.exe .\scripts\prepare_release.py --output .\release\xiaohongshu-emotion-writer
 ```
 
 脚本按源码目录与文件类型白名单复制，生成 ZIP 和 SHA-256 文件清单；排除个人数据、密钥文件、日志、依赖和原 Git 历史。疑似密钥或个人绝对路径会阻断整理，仅输出文件名。此扫描不能替代人工审阅，公开前还需检查截图和自定义内容。

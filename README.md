@@ -1,17 +1,17 @@
-# 潮湿雨季 · Chaoshi Yuji
+# 潮湿雨季｜小红书女性情感内容创作助手
 
-[![Checks](https://github.com/yangjingwen2008-lang/chaoshi-yuji/actions/workflows/checks.yml/badge.svg)](https://github.com/yangjingwen2008-lang/chaoshi-yuji/actions/workflows/checks.yml)
+[![Checks](https://github.com/yangjingwen2008-lang/xiaohongshu-emotion-writer/actions/workflows/checks.yml/badge.svg)](https://github.com/yangjingwen2008-lang/xiaohongshu-emotion-writer/actions/workflows/checks.yml)
 ![Windows](https://img.shields.io/badge/Windows-10%20%2F%2011-0078D4)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB)
 ![Node.js](https://img.shields.io/badge/Node.js-22.12%2B-339933)
 
 **把一个主题，慢慢写成自己的文章。**
 
-面向女性情感随笔的 Windows 本地创作工作台。支持选题、三个写作方案、细节确认、初稿、人工编辑、风格学习、质量检查、AI 图片生成、封面导出与发布后复盘。
+面向小红书女性情感账号的 Windows 本地 AI 内容创作助手。支持选题、三个写作方案、细节确认、初稿、人工编辑、风格学习、质量检查、AI 图片生成、封面导出与发布后复盘。
 
 文章和版本主要留在本机。DeepSeek 负责需要模型的步骤，Tavily 提供有限的公开网页搜索。所有文章由你审阅、导出并手动发布。
 
-A Windows desktop writing workbench for Chinese personal essays, with guided drafting, human editing, style learning, quality checks, configurable image generation, and local export.
+A local Windows AI writing assistant for Xiaohongshu (RED) creators, focused on women's personal and emotional essays, with guided drafting, human editing, style learning, quality checks, image generation, and local export.
 
 [功能介绍](#能做什么) · [安装启动](#安装与启动) · [图像生成](#描述生成封面图片) · [技术结构](#技术结构) · [参与贡献](CONTRIBUTING.md) · [完整文档](docs/完整使用说明.md)
 
@@ -34,15 +34,15 @@ A Windows desktop writing workbench for Chinese personal essays, with guided dra
 
 运行环境：**Windows 10/11、Python 3.11+、Node.js 22.12+ 和 npm**。先在终端确认 `python --version`、`node --version`、`npm.cmd --version` 可用。首次安装需要联网。
 
-1. 在仓库页面选择 **Code → Download ZIP**，解压到可写目录，例如 `D:\Projects\chaoshi-yuji`；也可以使用下方 Git 命令克隆。
+1. 在仓库页面选择 **Code → Download ZIP**，解压到可写目录，例如 `D:\Projects\xiaohongshu-emotion-writer`；也可以使用下方 Git 命令克隆。
 2. 双击 **安装潮湿雨季.bat**，等待出现“安装完成”。
 3. 双击 **启动潮湿雨季.bat**，打开 `http://127.0.0.1:8765`。
 4. 在设置页填写 DeepSeek API Key；需要公开搜索时再配置 Tavily。
 5. 返回工作台，从主题和情绪开始创作。
 
 ```powershell
-git clone https://github.com/yangjingwen2008-lang/chaoshi-yuji.git
-cd chaoshi-yuji
+git clone https://github.com/yangjingwen2008-lang/xiaohongshu-emotion-writer.git
+cd xiaohongshu-emotion-writer
 ```
 
 也可在项目根目录执行：
@@ -115,7 +115,7 @@ XR_PORT=8765
 | 检查 | pytest、Vitest、oxlint、GitHub Actions |
 
 ```text
-chaoshi-yuji/
+xiaohongshu-emotion-writer/
 ├── backend/          # API、业务流程、数据库迁移和测试
 ├── frontend/         # 页面、组件与前端测试
 ├── scripts/          # 安装、任务调度和源码整理
@@ -142,4 +142,4 @@ Docker 配置作为辅助方式保留，尚未在本次环境实测。Linux 容�
 
 当前未附加开源许可证。
 
-问题反馈请使用 [Issues](https://github.com/yangjingwen2008-lang/chaoshi-yuji/issues)，提交修改前请阅读 [贡献说明](CONTRIBUTING.md)。涉及密钥或个人数据的问题见 [安全说明](SECURITY.md)。
+问题反馈请使用 [Issues](https://github.com/yangjingwen2008-lang/xiaohongshu-emotion-writer/issues)，提交修改前请阅读 [贡献说明](CONTRIBUTING.md)。涉及密钥或个人数据的问题见 [安全说明](SECURITY.md)。
