@@ -5,14 +5,22 @@ import { request } from './lib/api'
 import { Sidebar } from './components/Sidebar'
 import { PageBoundary } from './components/PageBoundary'
 import { Dashboard } from './pages/Dashboard'
+import { LaunchMark, Opening } from './components/Opening'
 import './index.css'
 import './usability.css'
+import './studio.css'
 
 const SetupPage = lazy(() => import('./pages/SetupPage').then((m) => ({ default: m.SetupPage })))
 const Composer = lazy(() => import('./pages/Composer').then((m) => ({ default: m.Composer })))
 const ContentLibrary = lazy(() => import('./pages/ContentLibrary').then((m) => ({ default: m.ContentLibrary })))
 const StyleTrainingPage = lazy(() => import('./pages/StyleTrainingPage').then((m) => ({ default: m.StyleTrainingPage })))
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage').then((m) => ({ default: m.AnalyticsPage })))
+const openingKey = 'chaoshi-yuji.opening.v1'
+
+function hasSeenOpening() {
+  try { return localStorage.getItem(openingKey) === 'seen' }
+  catch { return false }
+}
 
 export default function App() {
   const [page, setPage] = useState('home')
@@ -23,6 +31,8 @@ export default function App() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [opening, setOpening] = useState(false)
+  const [seenOpening, setSeenOpening] = useState(hasSeenOpening)
+  const [launching, setLaunching] = useState(() => !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
   const navigation = useRef(0)
   const selectedId = useRef<string | null>(null)
   const loadVersion = useRef(0)
@@ -41,6 +51,12 @@ export default function App() {
     finally { if (current === loadVersion.current) setLoading(false) }
   }
   useEffect(() => { void Promise.resolve().then(load) }, [])
+
+  function finishOpening() {
+    try { localStorage.setItem(openingKey, 'seen') } catch { /* Storage may be disabled. */ }
+    setSeenOpening(true)
+    void load()
+  }
 
   function navigate(next: string) {
     navigation.current += 1
@@ -68,6 +84,11 @@ export default function App() {
     } finally { if (current === navigation.current) setOpening(false) }
   }
 
+  function openCreated(content: Content) {
+    setContents((current) => [content, ...current.filter((item) => item.id !== content.id)])
+    void openContent(content.id)
+  }
+
   async function refreshSelected() {
     if (!selected || selectedId.current !== selected.id) return
     const current = navigation.current
@@ -78,7 +99,9 @@ export default function App() {
   }
 
   const loadingView = <main className="page loading-page" role="status"><LoaderCircle className="spin" size={22} /><p>正在打开工作台……</p></main>
-  const activePage = page === 'home' && status && !status.deepseek_configured ? 'settings' : page
+  const activePage = page
+  if (launching) return <LaunchMark returning={seenOpening} onDone={() => setLaunching(false)} />
+  if (status && !seenOpening) return <Opening status={status} onDone={finishOpening} />
   return (
     <div className="app-shell">
       <Sidebar page={activePage} setPage={navigate} />
@@ -87,13 +110,15 @@ export default function App() {
         {opening && <div className="app-feedback" role="status"><LoaderCircle className="spin" size={16} />正在读取文章……</div>}
         <PageBoundary key={activePage}>
           <Suspense fallback={loadingView}>
+            <div className="page-arrival" key={activePage}>
             {loading ? loadingView : !status ? <main className="page"><h1>暂时无法连接工作台</h1><p>请确认启动脚本已运行，然后点击上方“重新连接”。</p></main>
               : activePage === 'settings' ? <SetupPage status={status} onSaved={load} focusImageSettings={focusImageSettings} />
-              : activePage === 'composer' && selected ? <Composer key={selected.id} content={selected} refresh={refreshSelected} goHome={() => navigate('home')} goSettings={() => { navigate('settings'); setFocusImageSettings(true) }} />
+              : activePage === 'composer' && selected ? <Composer key={selected.id} content={selected} refresh={refreshSelected} goHome={() => navigate('home')} goSettings={() => { navigate('settings'); setFocusImageSettings(true) }} writingConfigured={status.writing_configured ?? status.deepseek_configured} goWritingSettings={() => navigate('settings')} />
               : activePage === 'drafts' ? <ContentLibrary contents={contents} onOpen={openContent} goHome={() => navigate('home')} />
               : activePage === 'style' ? <StyleTrainingPage />
               : activePage === 'analytics' ? <AnalyticsPage />
-              : <Dashboard contents={contents} status={status} onCreated={(content) => void openContent(content.id)} onOpen={openContent} onAnalytics={() => navigate('analytics')} />}
+              : <Dashboard contents={contents} status={status} onCreated={openCreated} onOpen={openContent} onAnalytics={() => navigate('analytics')} onSettings={() => navigate('settings')} />}
+            </div>
           </Suspense>
         </PageBoundary>
       </div>

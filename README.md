@@ -5,15 +5,13 @@
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB)
 ![Node.js](https://img.shields.io/badge/Node.js-22.12%2B-339933)
 
-**把一个主题，慢慢写成自己的文章。**
+潮湿雨季是面向小红书女性情感随笔作者的 Windows 本地写作工作台。从一个主题和一种情绪起笔，挑选方案、补充细节，再编辑成篇。工作台会保留草稿和版本，也可以用来做封面、导出发布包和复盘。
 
-面向小红书女性情感账号的 Windows 本地 AI 内容创作助手。支持选题、三个写作方案、细节确认、初稿、人工编辑、风格学习、质量检查、AI 图片生成、封面导出与发布后复盘。
-
-文章和版本主要留在本机。DeepSeek 负责需要模型的步骤，Tavily 提供有限的公开网页搜索。所有文章由你审阅、导出并手动发布。
+文章和版本主要留在本机。需要模型的步骤使用你选择的写作服务，支持 DeepSeek、OpenAI 和中国大陆版通义千问。Tavily 提供有限的公开网页搜索。所有文章由你审阅、导出并手动发布。
 
 A local Windows AI writing assistant for Xiaohongshu (RED) creators, focused on women's personal and emotional essays, with guided drafting, human editing, style learning, quality checks, image generation, and local export.
 
-[实操截图](#实操运营截图) · [功能介绍](#能做什么) · [安装启动](#安装与启动) · [图像生成](#描述生成封面图片) · [技术结构](#技术结构) · [参与贡献](CONTRIBUTING.md) · [完整文档](docs/完整使用说明.md)
+[下载 v0.2.0](https://github.com/yangjingwen2008-lang/xiaohongshu-emotion-writer/releases/tag/v0.2.0) · [工作台预览](#工作台预览) · [实操截图](#实操运营截图) · [安装启动](#安装与启动) · [完整文档](docs/完整使用说明.md)
 
 ## 实操运营截图
 
@@ -27,7 +25,11 @@ A local Windows AI writing assistant for Xiaohongshu (RED) creators, focused on 
 
 ## 工作台预览
 
-![工作台示例，全部为虚构演示数据](docs/images/dashboard.png)
+首次打开会看到可跳过的配置引导和欢迎动画。工作台首屏可以写下新念头，也可以接着写已有草稿。
+
+![新版桌面工作台，空白演示环境](docs/images/ui-v3-desktop.png)
+
+[查看手机布局](docs/images/ui-v3-mobile.png)
 
 ## 能做什么
 
@@ -46,10 +48,10 @@ A local Windows AI writing assistant for Xiaohongshu (RED) creators, focused on 
 
 运行环境：**Windows 10/11、Python 3.11+、Node.js 22.12+ 和 npm**。先在终端确认 `python --version`、`node --version`、`npm.cmd --version` 可用。首次安装需要联网。
 
-1. 在仓库页面选择 **Code → Download ZIP**，解压到可写目录，例如 `D:\Projects\xiaohongshu-emotion-writer`；也可以使用下方 Git 命令克隆。
+1. 从 [发布页](https://github.com/yangjingwen2008-lang/xiaohongshu-emotion-writer/releases/tag/v0.2.0) 下载 `chaoshi-yuji-v0.2.0.zip` 并解压到可写目录。也可以用下方 Git 命令克隆。
 2. 双击 **安装潮湿雨季.bat**，等待出现“安装完成”。
 3. 双击 **启动潮湿雨季.bat**，打开 `http://127.0.0.1:8765`。
-4. 在设置页填写 DeepSeek API Key；需要公开搜索时再配置 Tavily。
+4. 首次打开浏览器时，按引导选择写作服务并填写 API Key，也可先跳过。在工作台的「设置 → 模型与连接」可以随时配置、切换和测试连接。需要公开搜索时，再到「检索服务与 DeepSeek 高级设置」配置 Tavily。
 5. 返回工作台，从主题和情绪开始创作。
 
 ```powershell
@@ -107,7 +109,8 @@ XR_PORT=8765
 ### 本地使用与联网范围
 
 - 不登录小红书，不读取 Cookie、验证码或账号后台，不自动发帖或回复。
-- 模型步骤会将相应内容发送给配置的 DeepSeek；公开搜索会将查询发送给 Tavily。
+- 模型步骤会将相应内容发送给当前写作服务；公开搜索会将查询发送给 Tavily。
+- 建稿前的主题、情绪和补充要求暂存在当前浏览器。建稿后会清除暂存，也可以在表单中手动清除。
 - 文字生图只向配置的图像服务发送画面描述、模型和生成参数，不附带整篇文章或历史写作内容。
 - 原创度仅覆盖本地历史、人工补充资料和搜索服务可访问的公开摘要，不承诺“全网原创”。
 - OCR 依赖 Windows 本地识别能力；热点及评论截图确认或放弃后删除，复盘原图按用户选择保留。
@@ -122,7 +125,7 @@ XR_PORT=8765
 | 前端 | React 19、TypeScript、Vite、Tiptap 富文本编辑器 |
 | 后端 | Python、FastAPI、Pydantic、SQLAlchemy |
 | 数据 | SQLite、FTS5 本地检索、Alembic 迁移 |
-| 外部服务 | DeepSeek、Tavily、可配置的 Images 兼容图像接口 |
+| 外部服务 | DeepSeek、OpenAI、通义千问、Tavily、可配置的 Images 兼容图像接口 |
 | Windows 集成 | 本地 OCR、系统凭据管理器、双击启动脚本 |
 | 检查 | pytest、Vitest、oxlint、GitHub Actions |
 
@@ -139,7 +142,7 @@ xiaohongshu-emotion-writer/
 └── README.md
 ```
 
-目前已通过 130 项后端测试、31 项前端测试，以及真实 DeepSeek、Tavily、Windows OCR 和导出流程实测。真实生图需由使用者配置服务后验证，详情见下方报告。
+v0.2.0 通过 132 项后端测试和 37 项前端测试。桌面及手机的欢迎动画、按钮反馈和字体加载见 [新版界面验收记录](docs/UI_V3_QA.md)。真实 DeepSeek、Tavily、Windows OCR 和导出流程的实测见下方报告。
 
 ## 文档与开发
 

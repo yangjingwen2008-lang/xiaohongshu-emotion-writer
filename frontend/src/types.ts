@@ -24,10 +24,15 @@ export type Content = {
   artifacts?: Artifact[]
 }
 
+export type WritingPreset = { id: string; label: string; model: string; configured: boolean }
+
 export type SetupStatus = {
   deepseek_configured: boolean
   tavily_configured: boolean
   deepseek_model: string
+  writing_provider?: string
+  writing_configured?: boolean
+  writing_providers?: WritingPreset[]
   price?: Record<string, number> | null
   price_source?: string | null
 }

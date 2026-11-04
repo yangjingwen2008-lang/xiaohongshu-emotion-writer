@@ -104,7 +104,7 @@ export function TrendPanel({ status, onCreated }: { status: SetupStatus | null; 
     <div className="panel-title"><span>今日热点候选</span><small>{latestRun ? `${new Date(latestRun.started_at).toLocaleString('zh-CN')} · ${latestRun.data_status === 'sufficient' ? `${latestRun.candidate_count} 个候选` : '本次数据不足'}` : status?.tavily_configured ? '可手动刷新' : '等待公开来源或手工补充'}</small></div>
     <div className="trend-toolbar">
       <p>只提取公开来源中可转化为私人随笔的情绪内核；搜索结果数量和 Provider 分数都不会被当作真实平台热度。</p>
-      <div><button className="ghost" disabled={!!busy} onClick={() => setShowManual(!showManual)}><Plus size={14} />补充话题或链接</button><button className="primary" disabled={!!busy || (!status?.deepseek_configured)} onClick={refresh}>{busy === 'refresh' ? <LoaderCircle className="spin" size={15} /> : <RotateCcw size={15} />}手动刷新</button></div>
+      <div><button className="ghost" disabled={!!busy} onClick={() => setShowManual(!showManual)}><Plus size={14} />补充话题或链接</button><button className="primary" disabled={!!busy || !(status?.writing_configured ?? status?.deepseek_configured)} onClick={refresh}>{busy === 'refresh' ? <LoaderCircle className="spin" size={15} /> : <RotateCcw size={15} />}手动刷新</button></div>
     </div>
     {error && <div className="error-banner">{error}</div>}
     {latestRun?.error_summary && !error && <div className={latestRun.status === 'failed' ? 'error-banner' : 'trend-limit'}>{latestRun.error_summary}</div>}

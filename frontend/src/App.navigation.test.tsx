@@ -12,6 +12,7 @@ vi.mock('./pages/Composer', () => ({ Composer: ({ content, refresh, goHome }: { 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); callbacks.refreshA = undefined })
 
 it('keeps article B open when an earlier refresh or mutation of article A finishes', async () => {
+  localStorage.setItem('chaoshi-yuji.opening.v1', 'seen')
   let readsA = 0
   let resolveOld!: (value: Response) => void
   vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {

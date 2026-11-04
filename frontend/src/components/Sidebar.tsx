@@ -1,4 +1,6 @@
-import { BarChart3, BookOpen, Compass, Feather, FileText, Settings, ShieldCheck } from 'lucide-react'
+import type { CSSProperties } from 'react'
+import { BarChart3, BookOpen, Compass, FileText, Settings, ShieldCheck } from 'lucide-react'
+import { RainMark } from './RainMark'
 
 export function Sidebar({ page, setPage }: { page: string; setPage: (page: string) => void }) {
   const items = [
@@ -11,10 +13,10 @@ export function Sidebar({ page, setPage }: { page: string; setPage: (page: strin
   return (
     <aside className="sidebar">
       <button className="brand" onClick={() => setPage('home')}>
-        <span className="brand-mark"><Feather size={20} /></span>
+        <span className="brand-mark"><RainMark /></span>
         <span><strong>潮湿雨季</strong><small>情感随笔工作台</small></span>
       </button>
-      <nav aria-label="主导航">
+      <nav aria-label="主导航" style={{ '--nav-index': Math.max(0, items.findIndex(([key]) => key === page)), '--nav-visible': page === 'composer' ? 0 : 1 } as CSSProperties}>
         {items.map(([key, Icon, label]) => (
           <button key={key} aria-current={page === key ? 'page' : undefined} className={page === key ? 'active' : ''} onClick={() => setPage(key)}>
             <Icon size={18} /><span>{label}</span>

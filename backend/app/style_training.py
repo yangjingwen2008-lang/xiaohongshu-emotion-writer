@@ -76,7 +76,7 @@ async def analyze_style(
     db.add(
         ApiUsage(
             content_id=None,
-            provider="deepseek",
+            provider=result.provider,
             task_type="style_training",
             model_name=result.model,
             input_tokens=result.input_tokens,

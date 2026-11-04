@@ -9,7 +9,13 @@ from .config import settings
 
 
 SERVICE_NAME = "潮湿雨季-API凭据"
-SECRET_NAMES = {"deepseek": "deepseek_api_key", "tavily": "tavily_api_key", "image": "image_api_key"}
+SECRET_NAMES = {
+    "deepseek": "deepseek_api_key",
+    "openai": "openai_api_key",
+    "qwen": "qwen_api_key",
+    "tavily": "tavily_api_key",
+    "image": "image_api_key",
+}
 
 
 class SecretStoreError(RuntimeError):

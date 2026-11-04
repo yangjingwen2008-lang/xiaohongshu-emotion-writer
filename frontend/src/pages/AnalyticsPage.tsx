@@ -219,7 +219,7 @@ export function AnalyticsPage() {
       </section>
       <section className="comment-assistant-panel">
         <div className="panel-title"><span>评论回复助手</span><small>只建议 · 不自动发送</small></div>
-        <p className="comment-boundary"><ShieldCheck size={15} />可一次粘贴多条评论，或上传评论截图在本机 OCR。截图确认/放弃后永久删除。生成回复时只会在你主动勾选同意后，把这一条已确认评论发送给 DeepSeek；应用没有登录、评论或发送接口。</p>
+        <p className="comment-boundary"><ShieldCheck size={15} />可一次粘贴多条评论，或上传评论截图在本机 OCR。截图确认/放弃后永久删除。生成回复时只会在你主动勾选同意后，把这一条已确认评论发送给当前写作服务；应用没有登录、评论或发送接口。</p>
         <label>选择已发布文章<select aria-label="选择评论所属文章" value={commentPublicationId} onChange={(e) => { setCommentPublicationId(e.target.value); setCommentText(''); setPendingCommentOcr(null); setCommentsConfirmed(false) }}><option value="">请选择</option>{publications.map((item) => <option key={item.id} value={item.id}>{item.final_title}</option>)}</select></label>
         {commentPublicationId && <div className="comment-intake">
           <div className="comment-intake-toolbar"><label className="analytics-ocr-file">上传评论截图<input aria-label="上传评论截图" type="file" accept="image/png,image/jpeg" disabled={busy || !!pendingCommentOcr} onChange={(e) => uploadCommentScreenshot(e.target.files?.[0])} /></label><small>{pendingCommentOcr ? '截图待核对，确认保存后原图会永久删除。' : '也可直接在下方粘贴；每行一条。'}</small></div>
@@ -235,7 +235,7 @@ export function AnalyticsPage() {
             <p>{comment.comment_text}</p>
             {latest ? <div className="reply-suggestion"><div><b>{latest.payload.tone}回复建议</b><small>{latest.payload.safety_note}</small></div><textarea aria-label={`回复建议 ${comment.author_label || '未记录昵称'}`} value={replyValue} maxLength={300} onChange={(e) => setReplyDrafts({ ...replyDrafts, [comment.id]: e.target.value })} /><button className="primary" onClick={() => copyCommentReply(comment.id, latest.payload.reply_text || '')}>{copiedReplyId === comment.id ? <Check size={14} /> : <FileText size={14} />}{copiedReplyId === comment.id ? '已复制，请手动发送' : '复制回复，手动发送'}</button></div> : <div className="reply-consent">
               {failed && <p className="report-error">上次生成失败：{failed.error_summary}</p>}
-              <label className="confirm-line"><input type="checkbox" checked={replyConsent[comment.id] || false} onChange={(e) => setReplyConsent({ ...replyConsent, [comment.id]: e.target.checked })} />我确认只把这一条评论发送给 DeepSeek 生成建议</label>
+              <label className="confirm-line"><input type="checkbox" checked={replyConsent[comment.id] || false} onChange={(e) => setReplyConsent({ ...replyConsent, [comment.id]: e.target.checked })} />我确认只把这一条评论发送给当前写作服务 生成建议</label>
               <button className="ghost" disabled={busy || !replyConsent[comment.id]} onClick={() => generateCommentReply(comment.id)}>{busy ? <LoaderCircle className="spin" size={14} /> : <Sparkles size={14} />}生成一条回复建议</button>
             </div>}
           </article> }) : <div className="empty-note"><FileText size={22} /><p>还没有已确认评论。粘贴或本地 OCR 后会显示在这里；应用不会自动发送任何回复。</p></div>}

@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     deepseek_base_url: str = "https://api.deepseek.com"
     tavily_base_url: str = "https://api.tavily.com"
     deepseek_api_key: str | None = None
+    openai_api_key: str | None = None
+    qwen_api_key: str | None = None
     tavily_api_key: str | None = None
     image_generation_enabled: bool = False
     image_base_url: str = ""

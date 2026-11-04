@@ -21,6 +21,7 @@ class ProviderResult:
     model: str
     input_tokens: int = 0
     output_tokens: int = 0
+    provider: str = "deepseek"
 
 
 @dataclass(frozen=True)
@@ -87,26 +88,45 @@ def _strip_json_fence(text: str) -> str:
     return value.strip()
 
 
-class DeepSeekProvider:
-    def __init__(self, api_key: str, model: str) -> None:
+@dataclass(frozen=True)
+class WritingPreset:
+    label: str
+    base_url: str
+    model: str
+
+
+WRITING_PRESETS = {
+    "deepseek": WritingPreset("DeepSeek", settings.deepseek_base_url, settings.deepseek_model),
+    "openai": WritingPreset("OpenAI", "https://api.openai.com/v1", "gpt-4o-mini"),
+    "qwen": WritingPreset("通义千问（中国大陆）", "https://dashscope.aliyuncs.com/compatible-mode/v1", "qwen-plus"),
+}
+
+
+class ChatCompletionProvider:
+    def __init__(self, api_key: str, model: str, provider: str) -> None:
         self.api_key = api_key
         self.model = model
+        self.provider = provider
 
     async def generate_json(self, *, system_prompt: str, user_prompt: str, task_type: str) -> ProviderResult:
-        body = {
+        preset = WRITING_PRESETS[self.provider]
+        body: dict[str, Any] = {
             "model": self.model,
             "messages": [
-                {"role": "system", "content": system_prompt},
+                {"role": "system", "content": f"{system_prompt}\n请输出一个 JSON 对象。"},
                 {"role": "user", "content": user_prompt},
             ],
             "response_format": {"type": "json_object"},
-            "thinking": {"type": "disabled"},
             "temperature": 0.8,
         }
+        if self.provider == "deepseek":
+            body["thinking"] = {"type": "disabled"}
+        elif self.provider == "qwen":
+            body["enable_thinking"] = False
         try:
             async with httpx.AsyncClient(timeout=settings.request_timeout_seconds) as client:
                 response = await client.post(
-                    f"{settings.deepseek_base_url.rstrip('/')}/chat/completions",
+                    f"{preset.base_url.rstrip('/')}/chat/completions",
                     headers={"Authorization": f"Bearer {self.api_key}"},
                     json=body,
                 )
@@ -114,15 +134,25 @@ class DeepSeekProvider:
                 data = response.json()
             content = data["choices"][0]["message"]["content"]
             payload = json.loads(_strip_json_fence(content))
-        except (httpx.HTTPError, KeyError, ValueError, json.JSONDecodeError) as exc:
-            raise ProviderError(f"DeepSeek 调用失败：{type(exc).__name__}") from exc
+            if not isinstance(payload, dict):
+                raise ValueError("Expected a JSON object")
+        except httpx.HTTPStatusError as exc:
+            raise ProviderError(f"{preset.label} 调用失败（HTTP {exc.response.status_code}）") from exc
+        except (httpx.HTTPError, KeyError, IndexError, AttributeError, TypeError, ValueError) as exc:
+            raise ProviderError(f"{preset.label} 调用失败：{type(exc).__name__}") from exc
         usage = data.get("usage") or {}
         return ProviderResult(
             payload=payload,
             model=self.model,
             input_tokens=int(usage.get("prompt_tokens") or 0),
             output_tokens=int(usage.get("completion_tokens") or 0),
+            provider=self.provider,
         )
+
+
+class DeepSeekProvider(ChatCompletionProvider):
+    def __init__(self, api_key: str, model: str) -> None:
+        super().__init__(api_key, model, "deepseek")
 
 
 class TavilySearchProvider:
@@ -254,12 +284,23 @@ def get_app_setting(db: Session, key: str, default: Any = None) -> Any:
     return record.value if record else default
 
 
-def build_llm_provider(db: Session) -> LLMProvider:
-    api_key = secret_store.get("deepseek")
+def active_writing_provider(db: Session) -> str:
+    provider = get_app_setting(db, "writing_provider", "deepseek")
+    return provider if isinstance(provider, str) and provider in WRITING_PRESETS else "deepseek"
+
+
+def writing_model(db: Session, provider: str) -> str:
+    if provider == "deepseek":
+        return str(get_app_setting(db, "deepseek_model", settings.deepseek_model))
+    return WRITING_PRESETS[provider].model
+
+
+def build_llm_provider(db: Session, provider: str | None = None) -> LLMProvider:
+    provider = provider or active_writing_provider(db)
+    api_key = secret_store.get(provider)
     if not api_key:
-        raise ProviderError("尚未配置 DeepSeek API Key，请先完成首次配置。")
-    model = str(get_app_setting(db, "deepseek_model", settings.deepseek_model))
-    return DeepSeekProvider(api_key=api_key, model=model)
+        raise ProviderError("请在设置中为写作服务填写 API Key。")
+    return ChatCompletionProvider(api_key, writing_model(db, provider), provider)
 
 
 def build_search_provider() -> SearchProvider:
@@ -277,7 +318,7 @@ def record_usage(db: Session, content_id: str | None, task_type: str, result: Pr
     db.add(
         ApiUsage(
             content_id=content_id,
-            provider="deepseek",
+            provider=result.provider,
             task_type=task_type,
             model_name=result.model,
             input_tokens=result.input_tokens,

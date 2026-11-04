@@ -42,6 +42,20 @@ def test_release_stops_before_copying_a_suspected_secret(tmp_path):
     assert not destination.exists()
 
 
+def test_release_includes_local_fonts_and_their_license(tmp_path):
+    root = tmp_path / 'source'
+    fonts = root / 'frontend/public/fonts'
+    fonts.mkdir(parents=True)
+    font_bytes = b'wOF2\x00\x81\xff\x00'
+    (fonts / 'RainSans-SC.woff2').write_bytes(font_bytes)
+    (fonts / 'NotoSans-LICENSE.md').write_text('SIL Open Font License', encoding='utf-8')
+    destination = tmp_path / 'font-release'
+    _, count = release.prepare(root, destination)
+    assert count == 2
+    assert (destination / 'frontend/public/fonts/RainSans-SC.woff2').read_bytes() == font_bytes
+    assert (destination / 'frontend/public/fonts/NotoSans-LICENSE.md').exists()
+
+
 def test_release_copies_the_exact_bytes_that_were_scanned(tmp_path, monkeypatch):
     root = tmp_path / 'source'
     root.mkdir()

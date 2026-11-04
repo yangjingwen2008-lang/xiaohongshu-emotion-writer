@@ -13,6 +13,8 @@ exports/
 uploads/
 screenshots/
 fonts/
+!frontend/public/fonts/
+!frontend/public/fonts/**
 frontend/node_modules/
 frontend/dist/
 *.db

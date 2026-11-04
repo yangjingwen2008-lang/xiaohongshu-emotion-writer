@@ -4,15 +4,43 @@ from sqlalchemy.orm import Session
 from ..config import instance_id, settings
 from ..database import get_db
 from ..models import AppSetting
-from ..providers import ProviderError, build_llm_provider, build_search_provider
+from ..providers import (
+    WRITING_PRESETS, ProviderError, active_writing_provider,
+    build_llm_provider, build_search_provider, writing_model,
+)
 from ..schemas import SetupRequest
 from ..security import SecretStoreError, secret_store
 from ..image_provider import ImageConfiguration, ImageSetupRequest, image_configuration, image_status, image_key_binding, image_key_matches
-from pydantic import ValidationError
+from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 
 
 router = APIRouter()
+
+
+class WritingSetup(BaseModel):
+    provider: Literal["deepseek", "openai", "qwen"]
+    api_key: str | None = Field(default=None, repr=False)
+
+
+@router.post("/setup/writing")
+def save_writing_setup(payload: WritingSetup, db: Session = Depends(get_db)) -> dict[str, bool]:
+    api_key = (payload.api_key or "").strip()
+    if len(api_key) > 512:
+        raise HTTPException(status_code=400, detail="API Key 长度超过 512 个字符。")
+    try:
+        if api_key:
+            secret_store.set(payload.provider, api_key)
+        elif not secret_store.get(payload.provider):
+            raise HTTPException(status_code=400, detail="请填写所选写作服务的 API Key。")
+        db.merge(AppSetting(key="writing_provider", value=payload.provider, source="用户选择写作服务"))
+        db.commit()
+    except SecretStoreError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except SQLAlchemyError as exc:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="写作服务未切换，请重新保存。") from exc
+    return {"saved": True}
 
 
 @router.get("/setup/image")
@@ -65,8 +93,17 @@ def health() -> dict[str, str]:
 def setup_status(db: Session = Depends(get_db)) -> dict:
     model = db.get(AppSetting, "deepseek_model")
     price = db.get(AppSetting, "deepseek_price")
+    active = active_writing_provider(db)
+    presets = [
+        {"id": provider, "label": preset.label, "model": writing_model(db, provider),
+         "configured": bool(secret_store.get(provider))}
+        for provider, preset in WRITING_PRESETS.items()
+    ]
     return {
-        "deepseek_configured": bool(secret_store.get("deepseek")),
+        "deepseek_configured": presets[0]["configured"],
+        "writing_provider": active,
+        "writing_configured": any(item["id"] == active and item["configured"] for item in presets),
+        "writing_providers": presets,
         "tavily_configured": bool(secret_store.get("tavily")),
         "deepseek_model": model.value if model else settings.deepseek_model,
         "price": price.value if price else None,
@@ -115,10 +152,10 @@ def save_setup(payload: SetupRequest, db: Session = Depends(get_db)) -> dict[str
 
 
 @router.post("/setup/test/{provider}")
-async def test_provider(provider: Literal["deepseek", "tavily"], db: Session = Depends(get_db)) -> dict:
-    if provider == "deepseek":
+async def test_provider(provider: Literal["writing", "deepseek", "tavily"], db: Session = Depends(get_db)) -> dict:
+    if provider != "tavily":
         try:
-            llm = build_llm_provider(db)
+            llm = build_llm_provider(db, "deepseek" if provider == "deepseek" else None)
             result = await llm.generate_json(
                 system_prompt="只输出 JSON 对象。",
                 user_prompt='请输出 {"ok": true}。',

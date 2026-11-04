@@ -6,6 +6,7 @@ describe('App', () => {
   afterEach(() => cleanup())
 
   beforeEach(() => {
+    localStorage.setItem('chaoshi-yuji.opening.v1', 'seen')
     vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input)
       let data: any = []
@@ -97,7 +98,8 @@ describe('App', () => {
     fireEvent.click(await screen.findByRole('button', { name: '设置' }))
     expect(await screen.findByRole('button', { name: '编辑宪法' })).toBeInTheDocument()
     expect(screen.getByText('用具体场景承载抽象情绪')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '测试 DeepSeek' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '测试连接' })).toBeInTheDocument()
+    fireEvent.click(screen.getByText('检索服务与 DeepSeek 高级设置'))
     expect(screen.getByRole('button', { name: '测试 Tavily' })).toBeDisabled()
   })
 
@@ -206,7 +208,7 @@ describe('App', () => {
 
     const generateReply = await screen.findByRole('button', { name: '生成一条回复建议' })
     expect(generateReply).toBeDisabled()
-    fireEvent.click(screen.getByRole('checkbox', { name: /只把这一条评论发送给 DeepSeek/ }))
+    fireEvent.click(screen.getByRole('checkbox', { name: /只把这一条评论发送给当前写作服务/ }))
     expect(generateReply).toBeEnabled()
     expect(screen.getByText(/应用没有登录、评论或发送接口/)).toBeInTheDocument()
   })

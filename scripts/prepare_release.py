@@ -10,7 +10,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 ROOT_FILES = {
     '.env.example', '.gitignore', '.dockerignore', '.gitattributes', '.editorconfig',
-    'README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md',
+    'README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'PRODUCT.md', 'DESIGN.md',
     'pyproject.toml', 'requirements.lock.txt', 'alembic.ini', 'Dockerfile', 'compose.yaml',
     '安装潮湿雨季.bat', '启动潮湿雨季.bat', '启动潮湿雨季_局域网.bat', '停止潮湿雨季.bat',
 }
@@ -18,7 +18,7 @@ SOURCE_TREES = {'backend', 'frontend', 'scripts', 'docs', '.github'}
 EXCLUDED = {'.git', '.venv', '__pycache__', '.pytest_cache', '.test_data', 'node_modules',
             'dist', 'coverage', '.agents', '.codex', '.work', 'release'}
 EXTENSIONS = {'.py', '.ps1', '.bat', '.json', '.toml', '.yaml', '.yml', '.ini', '.mako',
-              '.md', '.tsx', '.ts', '.css', '.html', '.svg', '.png', '.jpg', '.webp'}
+              '.md', '.tsx', '.ts', '.css', '.html', '.svg', '.png', '.jpg', '.webp', '.woff2'}
 TOKEN_PATTERN = re.compile(r'\b(?:sk-|tvly-)[A-Za-z0-9_-]{24,}\b|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----')
 PERSONAL_PATH = re.compile(r'(?:[A-Za-z]:[\\/]+Users[\\/]+[^\\/\s`"\']+|' + '/' + 'Users' + r'/[^/\s]+)')
 
@@ -55,7 +55,7 @@ def prepare(root: Path, destination: Path) -> tuple[Path, int]:
     snapshots = []
     for path in files:
         raw = path.read_bytes()
-        if path.suffix not in {'.png', '.jpg', '.webp'}:
+        if path.suffix not in {'.png', '.jpg', '.webp', '.woff2'}:
             content = raw.decode('utf-8-sig')
             if TOKEN_PATTERN.search(content) or PERSONAL_PATH.search(content):
                 raise ValueError(f'发现疑似密钥或个人绝对路径，请人工检查：{path.relative_to(root)}')

@@ -1,7 +1,7 @@
 {
   "name": "chaoshi-yuji-frontend",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,14 +11,14 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@tiptap/core": "3.31.3",
     "@tiptap/extension-placeholder": "3.31.3",
     "@tiptap/pm": "3.31.3",
     "@tiptap/react": "3.31.3",
     "@tiptap/starter-kit": "3.31.3",
     "lucide-react": "^1.24.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "@tiptap/core": "3.31.3"
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
@@ -30,8 +30,8 @@
     "jsdom": "^29.1.1",
     "oxlint": "^1.71.0",
     "typescript": "~6.0.2",
-    "vite": "^8.1.1",
-    "vitest": "^4.1.11"
+    "vite": "8.3.5",
+    "vitest": "4.1.12"
   },
   "engines": {
     "node": ">=22.12.0"
