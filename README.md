@@ -31,6 +31,12 @@ A local Windows AI writing assistant for Xiaohongshu (RED) creators, focused on 
 
 [查看手机布局](docs/images/ui-v3-mobile.png)
 
+## 主分支最新改进
+
+借鉴 [LLM Reader](https://github.com/maaoding/llm-reader) 的阅读与设置体验，主分支增加阅读外观设置、专注模式、内容库筛选和收藏、快速搜索、草稿恢复及未保存提醒。阅读偏好、收藏和临时草稿保存在当前浏览器中；文章版本仍由工作台保存。编辑器的 Markdown 下载是当前草稿的便捷导出，正式发布包仍需走原有审核和导出流程。
+
+以下 v0.2.0 发布包为此前版本；要使用上述改进，请克隆主分支并按安装步骤启动。
+
 ## 能做什么
 
 | 环节 | 能力 |

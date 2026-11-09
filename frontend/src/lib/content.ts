@@ -5,7 +5,7 @@ export function latest(content: Content | null, type: string) {
 }
 
 export function stepLabel(step: string) {
-  const labels: Record<string, string> = { idea_intake: '主题已保存', plan_selection: '等待选择方案', detail_enrichment: '补充一个细节', draft_generation: '准备生成正文', human_edit: '人工编辑' }
+  const labels: Record<string, string> = { idea_intake: '主题已保存', plan_selection: '等待选择方案', detail_enrichment: '补充一个细节', draft_generation: '准备生成正文', human_edit: '人工编辑', review_submission: '审核与导出', published: '已发布', quality_review: '质量检查' }
   return labels[step] || step
 }
 

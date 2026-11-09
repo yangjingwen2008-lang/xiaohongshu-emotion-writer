@@ -5,9 +5,9 @@ import App from './App'
 
 const callbacks = vi.hoisted(() => ({ refreshA: undefined as (() => Promise<void>) | undefined }))
 vi.mock('./pages/Dashboard', () => ({ Dashboard: ({ onOpen }: { onOpen: (id: string) => void }) => <><button onClick={() => onOpen('A')}>打开 A</button><button onClick={() => onOpen('B')}>打开 B</button></> }))
-vi.mock('./pages/Composer', () => ({ Composer: ({ content, refresh, goHome }: { content: Content; refresh: () => Promise<void>; goHome: () => void }) => {
+vi.mock('./pages/Composer', () => ({ Composer: ({ content, refresh, goHome, onDirtyChange }: { content: Content; refresh: () => Promise<void>; goHome: () => void; onDirtyChange?: (dirty: boolean) => void }) => {
   if (content.id === 'A') callbacks.refreshA = refresh
-  return <><h1>文章 {content.id}</h1><button onClick={() => void refresh()}>刷新文章</button><button onClick={goHome}>返回首页</button></>
+  return <><h1>文章 {content.id}</h1><button onClick={() => onDirtyChange?.(true)}>模拟修改</button><button onClick={() => void refresh()}>刷新文章</button><button onClick={goHome}>返回首页</button></>
 } }))
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); callbacks.refreshA = undefined })
 
@@ -35,4 +35,24 @@ it('keeps article B open when an earlier refresh or mutation of article A finish
   await act(async () => { await delayedMutationRefresh() })
   expect(readsA).toBe(2)
   expect(screen.getByRole('heading', { name: '文章 B' })).toBeInTheDocument()
+})
+
+
+it('keeps editing on cancel and only navigates after explicit leave confirmation', async () => {
+  localStorage.setItem('chaoshi-yuji.opening.v1', 'seen')
+  HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', '') }
+  vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {
+    const url = String(input)
+    return new Response(JSON.stringify(url.endsWith('/setup/status') ? { deepseek_configured: true } : url.endsWith('/contents') ? [] : { id: 'A', title: 'A' }))
+  }))
+  render(<App />)
+  fireEvent.click(await screen.findByRole('button', { name: '打开 A' }))
+  fireEvent.click(await screen.findByRole('button', { name: '模拟修改' }))
+  fireEvent.click(screen.getByRole('button', { name: '返回首页' }))
+  expect(screen.getByRole('dialog')).toBeVisible()
+  fireEvent.click(screen.getByRole('button', { name: '继续编辑' }))
+  expect(screen.getByRole('heading', { name: '文章 A' })).toBeVisible()
+  fireEvent.click(screen.getByRole('button', { name: '返回首页' }))
+  fireEvent.click(screen.getByRole('button', { name: '仍然离开' }))
+  expect(await screen.findByRole('button', { name: '打开 A' })).toBeVisible()
 })

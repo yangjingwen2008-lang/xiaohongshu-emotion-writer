@@ -96,8 +96,10 @@ describe('App', () => {
   it('opens the versioned editorial constitution from settings', async () => {
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: '设置' }))
+    fireEvent.click(await screen.findByRole('tab', { name: '写作边界' }))
     expect(await screen.findByRole('button', { name: '编辑宪法' })).toBeInTheDocument()
     expect(screen.getByText('用具体场景承载抽象情绪')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('tab', { name: '模型与连接' }))
     expect(screen.getByRole('button', { name: '测试连接' })).toBeInTheDocument()
     fireEvent.click(screen.getByText('检索服务与 DeepSeek 高级设置'))
     expect(screen.getByRole('button', { name: '测试 Tavily' })).toBeDisabled()
@@ -264,7 +266,7 @@ describe('App', () => {
 
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: '内容库' }))
-    fireEvent.click(await screen.findByRole('button', { name: /绕开那条街/ }))
+    fireEvent.click(await screen.findByRole('button', { name: '打开文章：绕开那条街' }))
     expect(await screen.findByText('本次风格记忆与历史避重')).toBeInTheDocument()
     expect(screen.getByText('保留具体动作与身体感')).toBeInTheDocument()
     expect(screen.getByText('旧街仍然记得')).toBeInTheDocument()
@@ -284,6 +286,7 @@ describe('App', () => {
   it('shows machine-readable provider security boundaries in settings', async () => {
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: '设置' }))
+    fireEvent.click(await screen.findByRole('tab', { name: '高级插件设置' }))
     expect(await screen.findByText('Provider 与插件安全中心')).toBeInTheDocument()
     expect(screen.getByText('Local Export Provider')).toBeInTheDocument()
     expect(screen.getByText(/不运行下载代码/)).toBeInTheDocument()

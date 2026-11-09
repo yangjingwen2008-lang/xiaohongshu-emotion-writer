@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react'
 import { BarChart3, BookOpen, Compass, FileText, Settings, ShieldCheck } from 'lucide-react'
 import { RainMark } from './RainMark'
 
-export function Sidebar({ page, setPage }: { page: string; setPage: (page: string) => void }) {
+export function Sidebar({ page, setPage, collapsed = false }: { page: string; setPage: (page: string) => void; collapsed?: boolean }) {
   const items = [
     ['home', Compass, '工作台'],
     ['drafts', FileText, '内容库'],
@@ -12,13 +12,13 @@ export function Sidebar({ page, setPage }: { page: string; setPage: (page: strin
   ] as const
   return (
     <aside className="sidebar">
-      <button className="brand" onClick={() => setPage('home')}>
+      <button className="brand" aria-label="潮湿雨季工作台" title={collapsed ? '潮湿雨季工作台' : undefined} onClick={() => setPage('home')}>
         <span className="brand-mark"><RainMark /></span>
         <span><strong>潮湿雨季</strong><small>情感随笔工作台</small></span>
       </button>
       <nav aria-label="主导航" style={{ '--nav-index': Math.max(0, items.findIndex(([key]) => key === page)), '--nav-visible': page === 'composer' ? 0 : 1 } as CSSProperties}>
         {items.map(([key, Icon, label]) => (
-          <button key={key} aria-current={page === key ? 'page' : undefined} className={page === key ? 'active' : ''} onClick={() => setPage(key)}>
+          <button key={key} aria-label={label} title={collapsed ? label : undefined} aria-current={page === key ? 'page' : undefined} className={page === key ? 'active' : ''} onClick={() => setPage(key)}>
             <Icon size={18} /><span>{label}</span>
           </button>
         ))}

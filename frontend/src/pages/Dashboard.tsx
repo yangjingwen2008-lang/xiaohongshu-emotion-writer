@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react'
 import { ArrowRight, BarChart3, ChevronRight, FileText, PenLine, Plug } from 'lucide-react'
 import type { Content, SetupStatus, Publication, DueSnapshot } from '../types'
 import { request } from '../lib/api'
+import { stringValue, useStoredState } from '../lib/preferences'
 import { stepLabel } from '../lib/content'
 import { CreateCard } from '../components/CreateCard'
 import { TrendPanel } from '../components/TrendPanel'
 
 export function Dashboard({ contents, status, onCreated, onOpen, onAnalytics, onSettings }: { contents: Content[]; status: SetupStatus | null; onCreated: (c: Content) => void; onOpen: (id: string) => void; onAnalytics: () => void; onSettings: () => void }) {
-  const drafts = contents.filter((item) => item.status === 'draft' || item.status === 'pending_review')
+  const drafts = contents.filter((item) => item.status === 'draft' || item.status === 'pending_review').sort((a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at))
+  const [lastId] = useStoredState('chaoshi-yuji.last-content.v1', '', stringValue)
+  const resume = contents.find((item) => item.id === lastId)
   const today = new Date()
   const [recentPublications, setRecentPublications] = useState<Publication[]>([])
   const [dueItems, setDueItems] = useState<DueSnapshot[]>([])
@@ -24,6 +27,7 @@ export function Dashboard({ contents, status, onCreated, onOpen, onAnalytics, on
           <span>{today.getMonth() + 1} 月 {today.getDate()} 日</span><small>{today.toLocaleDateString('zh-CN', { weekday: 'long' })}</small>
         </time>
       </header>
+      {resume && <div className="resume-strip"><FileText size={18} /><div><small>继续上次的文章 · {stepLabel(resume.current_step)}</small><strong>{resume.title || resume.theme}</strong></div><button className="ghost" onClick={() => onOpen(resume.id)}>继续查看<ChevronRight size={16} /></button></div>}
       <div className="desk-layout">
         <section className="writing-sheet" aria-label="开始创作">
           <header className="sheet-head"><span><PenLine size={17} />一篇新的随笔</span><small>文字从这里开始</small></header>
